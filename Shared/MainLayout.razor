@@ -1,0 +1,55 @@
+﻿@*@inherits LayoutComponentBase
+
+<div class="page">
+    
+
+    <main>
+        <div class="top-row px-4">
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+*@
+@inherits LayoutComponentBase
+
+<div >
+@*    Full Height sidebar : https://blazor.radzen.com/layout *@    
+    <RadzenLayout Style=" grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
+        <RadzenHeader>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
+                <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
+                <RadzenLabel Text="ARTISORA" />
+                <RadzenStack Gap="40">
+                    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.End" Gap="0">
+                        <RadzenButton Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Shade="Shade.Darker">
+                            <RadzenLink Path="Login" Text="Login" />
+                        </RadzenButton>
+                        <RadzenButton Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Shade="Shade.Darker">
+                            <RadzenLink Path="Signup" Text="Sign Up" />
+                        </RadzenButton>
+                    </RadzenStack>
+                </RadzenStack>
+            </RadzenStack>
+        </RadzenHeader>
+        <RadzenSidebar @bind-Expanded="@sidebarExpanded">
+            <RadzenPanelMenu>
+                <RadzenPanelMenuItem Text="Home" Icon="home" Path="Login"/>
+                <RadzenPanelMenuItem Text="Users" Icon="account_box" />
+            </RadzenPanelMenu>
+        </RadzenSidebar>
+        <RadzenBody>
+            <div class="rz-p-4">
+                @Body
+            </div>
+        </RadzenBody>
+    </RadzenLayout>
+
+</div>
+
+@code {
+    bool sidebarExpanded = true;
+    }
