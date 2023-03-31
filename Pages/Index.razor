@@ -1,5 +1,6 @@
 ﻿@page "/Signup"
 @inject HttpClient http
+@using ArtisoraServer
 
 <PageTitle>SignUp</PageTitle>
 
@@ -11,7 +12,7 @@
                 <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H2" Class="rz-mb-6">
                     Sign Up
                 </RadzenText>
-                <RadzenTemplateForm TItem="registrationDTO" Data="newMentee">
+                <RadzenTemplateForm TItem="UserRegDTO" Data="newMentee">
                     <RadzenStack Orientation="Orientation.Vertical" Gap="20" class="rz-py-5">
                         <RadzenLabel Text="Email" />
                         <RadzenTextBox Name="Email" @bind-Value=@newMentee.Email />
@@ -35,7 +36,7 @@
                         <RadzenLabel Text="Last Name" />
                         <RadzenTextBox Name="LastName" @bind-Value=@newMentee.LastName />
                     </RadzenStack>
-                    <RadzenButton ButtonType="ButtonType.Submit" Text="Submit" Click="@(()=>createUser(newMentee.Email))"></RadzenButton>
+                    <RadzenButton ButtonType="ButtonType.Submit" Text="Submit" Click="@(()=>createUser(newMentee))"></RadzenButton>
                 </RadzenTemplateForm>
             </RadzenCard>
         </RadzenColumn>
@@ -56,31 +57,24 @@
 </div>
 
 @code {
-    public class registrationDTO
-    {
-        public string Email;
-        public string Password;
-        public string FirstName;
-        public string LastName;
-    }
+    [Inject]
+    public ClientAPI? _api { get; set; }
 
-    registrationDTO newMentee = new registrationDTO();
 
-    //mentee mentees { get; set; }
+
+    UserRegDTO newMentee = new UserRegDTO();
+
 
     public string temp;
 
     public string RePassword;
-    async Task createUser(string emailInput)
+    async Task createUser(UserRegDTO newuser)
     {
-    //    //mentees = await http.GetFromJsonAsync<mentee>($"user/{emailInput}");
-    //    // var temp1 = await http.GetAsync($"api/user/{emailInput}");
-    //    //var tem = temp1.Content.ReadAsStringAsync();
-    //    //temp = await tem;
-    //    // mentees = await http.GetFromJsonAsync<mentee>("MenteeController/all");
+        newuser.Role = 1;
+        await _api.NewAsync(newuser);
 
-        var response = await http.GetAsync($"https://localhost:7123/all");
-       response.EnsureSuccessStatusCode();
-       temp = await response.Content.ReadAsStringAsync();
+       //var response = await http.PostAsync($"https://localhost:7123/mentee/new", newuser);
+       //response.EnsureSuccessStatusCode();
+       //temp = await response.Content.ReadAsStringAsync();
     }
 }
