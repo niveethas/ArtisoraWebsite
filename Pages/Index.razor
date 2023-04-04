@@ -1,5 +1,78 @@
 ﻿@page "/"
+@using System.Timers;
+
 
 <div>
-    <RadzenHeader>Welcome!</RadzenHeader>
+    <RadzenStack Class="rz-my-12 rz-mx-auto" Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap" JustifyContent="JustifyContent.Center" Gap="20px">
+        <RadzenCard>
+           <RadzenImage Style = "width:100%;" Path="@imagePath"></RadzenImage>
+            <RadzenText TextAlign="TextAlign.Center" Class=".rz-color-primary-darker" TextStyle="TextStyle.H4">
+                What do we do?
+            </RadzenText>
+            <RadzenText TextAlign="TextAlign.Center" TextStyle="TextStyle.Body1">
+                <strong>Artisora is a company built on the belief that art should be accessible to all! </strong><br>
+            </RadzenText>
+            <RadzenText TextAlign="TextAlign.Center" Class=".rz-color-primary-lighter" TextStyle="TextStyle.H4">
+                Meet our Mentors
+            </RadzenText>
+            <RadzenText TextAlign="TextAlign.Center" TextStyle="TextStyle.Body1">
+                Click here to view our mentors and see what we have to offer! The mentors are professional artists that will provide you with professional knowledge and in-depth artistic techniques.
+            </RadzenText>
+        </RadzenCard>
+        <RadzenCard Class=".rz-background-color-primary-light">
+            <RadzenText TextAlign="TextAlign.Center"  Class=".rz-color-primary-lighter" TextStyle="TextStyle.H4">
+                Sign up for free today!
+            </RadzenText>
+            <RadzenText TextAlign="TextAlign.Center"  TextStyle="TextStyle.Body1">
+                Signing up to our services will provide you with an opportunity to meet our mentors and get started on honing your skills.
+            </RadzenText>
+        </RadzenCard>
+   </RadzenStack>
+
 </div>
+
+@code{
+    public string imagePath = "Images/homepage (1).jpg";
+    public List<string> imageSlider = new List<string>();
+    private static System.Timers.Timer slideTimer;
+    public int Count = 1;
+
+    //load all images to be used in slideshow
+    protected override async Task OnInitializedAsync()
+    {
+        imageSlider.Add("Images/homepage (1).jpg");
+        imageSlider.Add("Images/homepage (2).jpg");
+        imageSlider.Add("Images/homepage (3).jpg");
+        imageSlider.Add("Images/homepage (4).jpg");
+        Timer();
+
+    }
+
+    //set timer to call slider function every 10 seconds
+    private void Timer(){
+        slideTimer = new System.Timers.Timer(10000);
+        slideTimer.Elapsed += new ElapsedEventHandler(Slider);
+        slideTimer.AutoReset = true;
+        slideTimer.Enabled = true;
+    }
+
+    //increment slider by 1 else set back to 0
+    public void SliderCounter(){
+        if (Count < imageSlider.Count){
+            Count += 1;
+            imagePath = imageSlider[Count];
+            StateHasChanged();
+        }else{
+            Count = 0;
+            imagePath = imageSlider[Count];
+            StateHasChanged();
+
+        }
+    }
+
+    //call incrementation when 10 seconds has passed
+    public void Slider(Object source, ElapsedEventArgs e){
+      SliderCounter();
+    }
+
+}
