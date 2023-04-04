@@ -42,14 +42,40 @@
         try
         {
             var response = await _api.MenteeAsync(username);
-            if (response != null)
+            var responseMr = await _api.MentorAsync(username);
+            if ((response != null)&&(responseMr == null))
             {
                 try
                 {
                     var foundPassword = await _api.PasswordAsync(username);
                     if ((foundPassword != null)&&(foundPassword.Equals(password))){
+                        CurrentUser._userid = response.MenteeId;
+                        CurrentUser._useremail = response.Email;
+                        CurrentUser._role = await _api.RoleAsync(username);
                         nav.NavigateTo("/");
                     }else{
+                        var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Error", Detail = "Incorrect Password", Duration = 4000 };
+                        notif.Notify(notifMsg);
+                    }
+                }
+                catch (HttpRequestException ex)
+                {
+                    var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Login failed", Duration = 4000 };
+                    notif.Notify(notifMsg);
+                }
+            }else if ((response == null)&&(responseMr != null)){
+                try
+                {
+                    var foundPassword = await _api.PasswordAsync(username);
+                    if ((foundPassword != null) && (foundPassword.Equals(password)))
+                    {
+                        CurrentUser._userid = responseMr.MentorId;
+                        CurrentUser._useremail = responseMr.Email;
+                        CurrentUser._role = await _api.RoleAsync(username);
+                        nav.NavigateTo("/");
+                    }
+                    else
+                    {
                         var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Error", Detail = "Incorrect Password", Duration = 4000 };
                         notif.Notify(notifMsg);
                     }
