@@ -1,5 +1,4 @@
 ﻿@page "/Signup"
-@inject HttpClient http
 @using ArtisoraServer
 @using System.Text.RegularExpressions
 @inject NotificationService notif
@@ -24,7 +23,7 @@
                     <RadzenStack Orientation="Orientation.Vertical" Gap="20" class="rz-py-5">
                         <RadzenLabel Text="Email" />
                         <RadzenTextBox Name="Email" @bind-Value=@newMentee.Email />
-                        <RadzenEmailValidator Component="Email" Text="Enter email" />
+                        <RadzenEmailValidator Component="Email" Text="Provide valid email" Popup=true Style="position: absolute" />
                     </RadzenStack>
 
                     <RadzenStack Orientation="Orientation.Vertical" Gap="20" class="rz-py-5">
