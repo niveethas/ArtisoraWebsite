@@ -1,0 +1,69 @@
+﻿@page "/uploader"
+@using ArtisoraServer
+@inject NotificationService notif
+@inject NavigationManager nav
+
+<div class="container-fluid">
+    <div class="row px-3">
+        <div class="col-lg-6 offset-lg-3 p-3">
+            <RadzenCard>
+                @*<RadzenFileInput @bind-Value=@imageUploaded.ImageURL @bind-FileName=@fileName @bind-FileSize=@fileSize TValue="string" class="w-100" />
+                <RadzenUpload Url="@_api.New2Async()" Auto="false" Icon="upload" ChooseText="Submit Work" Error=@(args => uploadError(args)) Attributes="">
+                </RadzenUpload>*@
+
+                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Upload Your Work</RadzenText>
+                <RadzenUpload  Auto="false" Error=@(args => uploadError(args)) Multiple="false" class="w-100" Url="https://localhost:7123/image/upload" Complete=@(args => uploadComplete(args)) />
+@*                <RadzenFileInput TValue="string" Auto="false" Error=@(args => uploadError(args)) class="w-100" Url="https://localhost:7123/image/upload"></RadzenFileInput>*@
+                <RadzenButton Text="Submit" Click=@(args => upload.Upload()) class="d-block mt-4" />
+            </RadzenCard>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Inject]
+    public ClientAPI? _api { get; set; }
+    Image imageUploaded = new Image();
+    public string fileName;
+    public long? fileSize;
+    RadzenUpload upload;
+    public int? currentUserid;
+    public Mentorship response;
+    public string filePath;
+
+    protected override async Task OnInitializedAsync()
+    {
+        currentUserid = CurrentUser._userid;
+        response = await _api.MenteeidAsync(currentUserid); //check if right method
+
+    }
+
+    void uploadImages (){
+
+        upload.Upload();
+    }
+
+    void uploadError(UploadErrorEventArgs args)
+    {
+        var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Error", Detail = "File submission failed.", Duration = 4000 };
+        notif.Notify(notifMsg);
+    }
+
+    void uploadComplete(UploadCompleteEventArgs args){
+        filePath = args.RawResponse;
+    }
+
+    public async Task updateImageDb(){
+        try{
+            var tempImage = new ImageDTO {
+                    MenteeId = response.MenteeId,
+                    MentorshipId = response.MentorshipId,
+                    ImageURL = filePath
+            };
+            _api.New2Async(tempImage);
+        }catch (Exception e)
+        {
+
+        }
+    }
+}
