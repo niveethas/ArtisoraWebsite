@@ -2,20 +2,18 @@
 @using ArtisoraServer
 @inject NotificationService notif
 @inject NavigationManager nav
+<RadzenNotification />
 
+<PageTitle>Upload Work</PageTitle>
 <div class="container-fluid">
     <div class="row px-3">
         <div class="col-lg-6 offset-lg-3 p-3">
             <RadzenCard>
-                @*<RadzenFileInput @bind-Value=@imageUploaded.ImageURL @bind-FileName=@fileName @bind-FileSize=@fileSize TValue="string" class="w-100" />
-                <RadzenUpload Url="@_api.New2Async()" Auto="false" Icon="upload" ChooseText="Submit Work" Error=@(args => uploadError(args)) Attributes="">
-                </RadzenUpload>*@
 
                 <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Upload Your Work</RadzenText>
-                <RadzenUpload  Auto="false" Error=@(args => uploadError(args)) Multiple="false" class="w-100" Url="https://localhost:7123/image/upload" Complete=@(args => uploadComplete(args)) />
-@*                <RadzenFileInput TValue="string" Auto="false" Error=@(args => uploadError(args)) class="w-100" Url="https://localhost:7123/image/upload"></RadzenFileInput>*@
-                <RadzenButton Text="Submit" Click=@(args => upload.Upload()) class="d-block mt-4" />
-            </RadzenCard>
+                <RadzenUpload  Auto="true" Error=@(args => uploadError(args)) Multiple="false" class="w-100" Url="https://localhost:7123/image/upload" Complete=@(args => uploadComplete(args)) />
+@*                <RadzenButton Text="Submit" Click=@(args => upload.Upload()) class="d-block mt-4" />
+*@            </RadzenCard>
         </div>
     </div>
 </div>
@@ -31,10 +29,19 @@
     public Mentorship response;
     public string filePath;
 
+    //restricts page to users that have mentorships signed up 
     protected override async Task OnInitializedAsync()
     {
         currentUserid = CurrentUser._userid;
-        response = await _api.MenteeidAsync(currentUserid); //check if right method
+        try
+        {
+            response = await _api.MenteeidAsync(currentUserid);
+        }catch{
+            var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Warning", Detail = "You must have a mentorship set up to upload work.", Duration = 4000 };
+            notif.Notify(notifMsg);
+            nav.NavigateTo("/");
+
+        }
 
     }
 
@@ -49,8 +56,9 @@
         notif.Notify(notifMsg);
     }
 
-    void uploadComplete(UploadCompleteEventArgs args){
+    async void uploadComplete(UploadCompleteEventArgs args){
         filePath = args.RawResponse;
+        await updateImageDb();
     }
 
     public async Task updateImageDb(){
@@ -61,9 +69,13 @@
                     ImageURL = filePath
             };
             _api.New2Async(tempImage);
+            var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Uploaded!", Detail = "Your upload has been successfully saved!", Duration = 4000 };
+            notif.Notify(notifMsg);
+            nav.NavigateTo("/imageView");
         }catch (Exception e)
         {
-
+            var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "File upload failed to save. Please try again.", Duration = 4000 };
+            notif.Notify(notifMsg);
         }
     }
 }
