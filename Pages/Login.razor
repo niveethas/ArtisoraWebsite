@@ -22,7 +22,7 @@
                 Login
             </RadzenText>
             <RadzenTemplateForm Data=@("SimpleLogin")>
-                <RadzenLogin AllowRegister="false" AllowResetPassword="false" Username="@inputEmail" Password="@inputPassword" AllowRememberMe="true" />
+                <RadzenLogin AllowRegister="false" AllowResetPassword="false" Username="@inputEmail" Password="@inputPassword" Login=@(args => loginUser(args)) AllowRememberMe="false" />
             </RadzenTemplateForm>
         </RadzenCard>
     </RadzenColumn>
@@ -37,28 +37,31 @@
     public string inputEmail;
     public string inputPassword;
 
-    async Task loginUser(string username, string password)
+
+
+    async Task loginUser(LoginArgs la)
     {
         try
         {
-            var response = await _api.MenteeAsync(username);
-            var responseMr = await _api.MentorAsync(username);
+            var response = await _api.MenteeAsync(la.Username);
+            var responseMr = await _api.MentorAsync(la.Username);
             if ((response != null)&&(responseMr == null))
             {
                 try
                 {
-                    var foundPassword = await _api.PasswordAsync(username);
-                    if ((foundPassword != null)&&(foundPassword.Equals(password))){
+                    var foundPassword = await _api.LoginAsync(la.Username);
+                    if ((foundPassword != null) && (foundPassword.Password.ToString().Equals(la.Password)))
+                    {
                         CurrentUser._userid = response.MenteeId;
                         CurrentUser._useremail = response.Email;
-                        CurrentUser._role = await _api.RoleAsync(username);
-                        nav.NavigateTo("/");
+                        CurrentUser._role = foundPassword.Role;
+                        nav.NavigateTo("/uploader");
                     }else{
                         var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Error", Detail = "Incorrect Password", Duration = 4000 };
                         notif.Notify(notifMsg);
                     }
                 }
-                catch (HttpRequestException ex)
+                catch (Exception ex)
                 {
                     var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Login failed", Duration = 4000 };
                     notif.Notify(notifMsg);
@@ -66,12 +69,12 @@
             }else if ((response == null)&&(responseMr != null)){
                 try
                 {
-                    var foundPassword = await _api.PasswordAsync(username);
-                    if ((foundPassword != null) && (foundPassword.Equals(password)))
+                    var foundPassword = await _api.LoginAsync(la.Username);
+                    if ((foundPassword != null) && (foundPassword.Password.ToString().Equals(la.Password)))
                     {
                         CurrentUser._userid = responseMr.MentorId;
                         CurrentUser._useremail = responseMr.Email;
-                        CurrentUser._role = await _api.RoleAsync(username);
+                        CurrentUser._role = foundPassword.Role;
                         nav.NavigateTo("/");
                     }
                     else
@@ -80,7 +83,7 @@
                         notif.Notify(notifMsg);
                     }
                 }
-                catch (HttpRequestException ex)
+                catch (Exception ex)
                 {
                     var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Login failed", Duration = 4000 };
                     notif.Notify(notifMsg);
@@ -92,7 +95,7 @@
                 notif.Notify(notifMsg);
             }
         }
-        catch (HttpRequestException ex)
+        catch (Exception ex)
         {
             var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "Login failed", Duration = 4000 };
             notif.Notify(notifMsg);
