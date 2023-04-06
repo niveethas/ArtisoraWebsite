@@ -9,15 +9,17 @@
 <RadzenNotification />
 <PageTitle>View Uploads</PageTitle>
 @if (allWorks != null){
-    <RadzenRow class="rz-text-align-center" Gap="0.5rem" RowGap="0.5rem">
+    <div class="rz-m-10">
+    <RadzenRow class="rz-text-align-center" Gap="2rem" RowGap="2rem">
         @foreach (var x in allWorks){
-            <RadzenColumn Size="6" class="rz-background-color-primary rz-color-secondary-lighter rz-p-5">
-                <RadzenImage Style="width:100%;" Path="@x.ImageURL"></RadzenImage>
-                <RadzenButton Text="View Comments" Click="() => openImageComments(x.ImageId)"></RadzenButton>
-                <RadzenButton Text="Add Comment" Click="() => addNewComment(x.ImageId,x.MentorshipId)"> </RadzenButton>
+            <RadzenColumn Size="6" class="rz-shadow-5 rz-border-radius-6 rz-color-secondary-lighter rz-p-5">
+                <RadzenImage Class="rz-border-radius-4 rz-m-6" Style=" width:contain" Path="@x.ImageURL"></RadzenImage>
+                <RadzenButton class="rz-background-color-base-200 rz-border-color-info-dark rz-color-info-dark rz-ripple rz-mx-2 rz-mb-2 rz-mt-4" Text="View Comments" Click="() => openImageComments(x.ImageId)"></RadzenButton>
+                <RadzenButton class="rz-background-color-info-dark rz-ripple rz-m-2" Text="Add Comment" Click="() => addNewComment(x.ImageId,x.MentorshipId)"> </RadzenButton>
             </RadzenColumn>
         }
     </RadzenRow>
+    </div>
 }
 
 
@@ -28,7 +30,6 @@
 
     private int? currentUserID = CurrentUser._userid;
     public ICollection<Image> allWorks = new List<Image>();
-
 
 
     protected override async Task OnInitializedAsync(){
@@ -46,9 +47,12 @@
     public async Task openImageComments(int imageid){
         try{
             var imageComments = await _api.MessagesAsync(imageid);
-            if (imageComments != null){
-                await dialog.OpenAsync<CommentsViewer>($"View Comments", new Dictionary<string, object>() { { "passedImageId", imageid } }, new DialogOptions() { Width = "100%", Height = "100%", Resizable = true, Draggable = true });
-            }else {
+            if (imageComments != null)
+            {
+                await dialog.OpenAsync<CommentsViewer>($"View Comments", new Dictionary<string, object>() { { null , null } }, new DialogOptions() { Width = "100%", Height = "100%", Resizable = true, Draggable = true });
+            }       
+            else 
+            {
                 var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Warning", Detail = "No existing comments, start a conversation!", Duration = 4000 };
                 notif.Notify(notifMsg);
             }
