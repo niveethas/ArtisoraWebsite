@@ -1,0 +1,67 @@
+﻿@page "/imageView"
+@using ArtisoraServer
+@inject NotificationService notif
+@inject NavigationManager nav
+@inject DialogService dialog
+
+
+<RadzenDialog />
+<RadzenNotification />
+<PageTitle>View Uploads</PageTitle>
+@if (allWorks != null){
+    <RadzenRow class="rz-text-align-center" Gap="0.5rem" RowGap="0.5rem">
+        @foreach (var x in allWorks){
+            <RadzenColumn Size="6" class="rz-background-color-primary rz-color-secondary-lighter rz-p-5">
+                <RadzenImage Style="width:100%;" Path="@x.ImageURL"></RadzenImage>
+                <RadzenButton Text="View Comments" Click="() => openImageComments(x.ImageId)"></RadzenButton>
+                <RadzenButton Text="Add Comment" Click="() => addNewComment(x.ImageId,x.MentorshipId)"> </RadzenButton>
+            </RadzenColumn>
+        }
+    </RadzenRow>
+}
+
+
+@code {
+    [Inject]
+    public ClientAPI? _api { get; set; }
+
+
+    private int? currentUserID = CurrentUser._userid;
+    public ICollection<Image> allWorks = new List<Image>();
+
+
+
+    protected override async Task OnInitializedAsync(){
+        try
+        {
+            allWorks = await _api.ImagesAsync(currentUserID);
+        }
+        catch{
+            var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Warning", Detail = "You must be logged in to view work.", Duration = 4000 };
+            notif.Notify(notifMsg);
+            nav.NavigateTo("/");
+        }
+    }
+
+    public async Task openImageComments(int imageid){
+        try{
+            var imageComments = await _api.MessagesAsync(imageid);
+            if (imageComments != null){
+                await dialog.OpenAsync<CommentsViewer>($"View Comments", new Dictionary<string, object>() { { "passedImageId", imageid } }, new DialogOptions() { Width = "100%", Height = "100%", Resizable = true, Draggable = true });
+            }else {
+                var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Warning", Detail = "No existing comments, start a conversation!", Duration = 4000 };
+                notif.Notify(notifMsg);
+            }
+        }catch{
+
+        }
+    }
+
+
+    public async Task addNewComment(int imageid, int mentorshipid)
+    {
+
+    }
+
+    
+}
