@@ -57,7 +57,7 @@
     }
 
     async void uploadComplete(UploadCompleteEventArgs args){
-        filePath = args.RawResponse;
+        filePath = @"\WorkImages\" + args.RawResponse;
         await updateImageDb();
     }
 
@@ -68,7 +68,7 @@
                     MentorshipId = response.MentorshipId,
                     ImageURL = filePath
             };
-            _api.New2Async(tempImage);
+           await _api.New2Async(tempImage);
             var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Uploaded!", Detail = "Your upload has been successfully saved!", Duration = 4000 };
             notif.Notify(notifMsg);
             nav.NavigateTo("/imageView");
