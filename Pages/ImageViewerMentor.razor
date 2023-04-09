@@ -1,0 +1,144 @@
+﻿@page "/imageViewMentor"
+@using ArtisoraServer
+@inject NotificationService notif
+@inject NavigationManager nav
+@inject DialogService dialog
+
+
+<RadzenDialog />
+<RadzenNotification />
+<PageTitle>View Uploads</PageTitle>
+@if (allWorks != null){
+    <div class="rz-m-10">
+          <div class="rz-p-sm-12 rz-text-align-center">
+            <RadzenDropDown @bind-Value=@selectedValue Data=@displayImageNames Change="@viewImage" Style="width: 100%; max-width: 400px;" />
+        </div>
+
+        @if (showImage.Equals("True")){
+            <RadzenRow class="rz-text-align-center" Gap="2rem" RowGap="1rem">
+            <RadzenColumn Size="6" class="rz-shadow-5 rz-border-radius-6 rz-color-secondary-lighter rz-p-5">
+               <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" Gap="20" class="rz-py-5">
+                <RadzenImage Class="rz-border-radius-4 rz-m-6" Style=" width:300px;" Path="@selectedImagePath"></RadzenImage>
+                  <RadzenTextArea @bind-Value=@newComment Placeholder="Add a new comment here..."></RadzenTextArea>
+                    <RadzenButton Text="Add New Comment" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Secondary" ButtonType="ButtonType.Submit" Click="() => addComment(newComment)" />
+                </RadzenStack>
+            </RadzenColumn>
+            <RadzenColumn >
+               <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" Gap="1" class="rz-py-5">
+                   @if (allComments != null){
+                        @foreach(var n in allComments){
+                            <RadzenText TextStyle="TextStyle.Body1">
+                                @n.TextContent
+                            </RadzenText>
+                        }
+                   }
+               </RadzenStack>
+            </RadzenColumn>
+            </RadzenRow>
+        }
+    </div>
+}
+
+
+@code {
+        [Inject]
+        public ClientAPI? _api { get; set; }
+
+    //public int currentUserID = 4;
+    private int? currentUserID = CurrentUser._userid;
+    public ICollection<Image> allWorks = new List<Image>();
+    public ICollection<Mentorship> allMentorships = new List<Mentorship>();
+    public string selectedValue = "Image names";
+    public string selectedValue1 = "Choose Mentorship";
+    public string showImage = "False";
+    public string selectedImagePath = "";
+    public List<string> displayImageNames = new List<string>();
+    public List<int> imageIds = new List<int>();
+    public List<int> mentorshipIds = new List<int>();
+    public ICollection<Message> allComments = new List<Message>();
+    public int selectedImageId;
+    public int selectedMentorshipId;
+    public string? newComment;
+    public List<int> msIds = new List<int>();
+
+
+    protected override async Task OnInitializedAsync(){
+        try
+        {
+            allMentorships = await _api.MentorshipsAsync(currentUserID);
+            foreach(var x in allMentorships)
+            {
+                msIds.Add(x.MentorshipId);
+            }
+        }
+        catch{
+            var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Warning", Detail = "You must be logged in to view work.", Duration = 4000 };
+            notif.Notify(notifMsg);
+            nav.NavigateTo("/");
+        }
+    }
+
+    public async Task openImageComments(int imageid){
+        try{
+            var imageComments = await _api.MessagesAsync(imageid);
+            if (imageComments != null)
+            {
+                await dialog.OpenAsync<CommentsViewer>($"View Comments", new Dictionary<string, object>() { { null , null } }, new DialogOptions() { Width = "100%", Height = "100%", Resizable = true, Draggable = true });
+            }       
+            else 
+            {
+                var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Warning", Detail = "No existing comments, start a conversation!", Duration = 4000 };
+                notif.Notify(notifMsg);
+            }
+        }catch{
+
+        }
+    }
+
+
+    public async Task addComment(string inputComment)
+    {
+        MessageDTO newMessage = new MessageDTO {
+                ImageId = selectedImageId,
+                MentorshipId = selectedMentorshipId,
+                TextContent = inputComment
+        };
+
+        await _api.New5Async(newMessage);
+
+        newComment = string.Empty;
+        allComments = await _api.MessagesAsync(selectedImageId);
+
+    }
+
+    public async Task viewDropdown(){
+        var position = allMentorships.IndexOf(selectedValue1);
+        selectedMentorshipId = msIds[position];
+        allWorks = await _api.MentorshipidAsync(selectedMentorshipId);
+        foreach (var x in allWorks)
+        {
+            var imageNametmp = x.ImageURL.Substring(12);
+            displayImageNames.Add(imageNametmp);
+            imageIds.Add(x.ImageId);
+            mentorshipIds.Add(x.MentorshipId);
+        }
+    }
+
+    public async Task viewImage(){
+
+        selectedImagePath = @"\WorkImages\" + selectedValue;
+        var position = displayImageNames.IndexOf(selectedValue);
+        selectedImageId = imageIds[position];
+        selectedMentorshipId = mentorshipIds[position];
+        try
+        {
+            allComments = await _api.MessagesAsync(selectedImageId);
+        }
+        catch{
+            
+        }
+            showImage = "True";
+
+        }
+    
+}
