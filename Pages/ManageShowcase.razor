@@ -1,0 +1,82 @@
+﻿@page "/showcase"
+@using ArtisoraServer
+@inject NotificationService notif
+@inject NavigationManager nav
+
+<RadzenDialog />
+<RadzenNotification />
+<PageTitle>View Showcases</PageTitle>
+
+<div class="rz-m-10">
+    @if (showcases != null)
+    {
+        <RadzenRow class="rz-text-align-center" Gap="2rem" RowGap="2rem">
+            @foreach (var s in showcases)
+            {
+                <RadzenText TextStyle="TextStyle.Overline" TextAlign="TextAlign.Center">Showcase No.: @s.ShowcaseId</RadzenText>
+                <RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Center">@s.SelfDescription</RadzenText>
+                <RadzenColumn Size="5" class=" rz-color-secondary-lighter rz-p-5">
+                    <RadzenStack Orientation="Orientation.Vertical" class="rz-py-5">
+                        <RadzenImage Style="width:300px;" Path="@s.Image1"></RadzenImage>
+                        <RadzenText TextStyle="TextStyle.Caption">@s.Image1Caption</RadzenText>
+                    </RadzenStack>
+                </RadzenColumn>
+                <RadzenColumn  class=" rz-color-secondary-lighter rz-p-5">
+                    <RadzenStack Orientation="Orientation.Vertical" class="rz-py-5">
+                        <RadzenImage Style="width:300px;" Path="@s.Image2"></RadzenImage>
+                        <RadzenText TextStyle="TextStyle.Caption">@s.Image2Caption</RadzenText>
+                    </RadzenStack>
+                </RadzenColumn>
+                <RadzenColumn  class=" rz-color-secondary-lighter rz-p-5">
+                    <RadzenStack Orientation="Orientation.Vertical" class="rz-py-5">
+                        <RadzenImage Style="width:300px;" Path="@s.Image3"></RadzenImage>
+                        <RadzenText TextStyle="TextStyle.Caption">@s.Image3Caption</RadzenText>
+                    </RadzenStack>
+                </RadzenColumn>
+            }
+        </RadzenRow>
+    }else{
+        <RadzenText TextAlign="TextAlign.Left" TextStyle="TextStyle.Subtitle1">You have not added any showcases yet! Please add a showcase below to be displayed publically!</RadzenText>
+    }
+    <RadzenCard Class="rz-shadow-0 rz-border-radius-0 rz-p-12">
+        <RadzenTemplateForm TItem="ShowcaseDTO" Data="newShowcase">
+        <RadzenStack Orientation="Orientation.Vertical">
+            <RadzenLabel Text="Third Image and Caption" />
+            <RadzenTextBox Name="description" @bind-Value =@newShowcase.SelfDescription></RadzenTextBox>
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Vertical">
+            <RadzenLabel Text="First Image and Caption" />
+            <RadzenUpload Auto="false" Error=@(args => uploadError(args)) Multiple="false" class="w-100" Url="https://localhost:7123/image/upload" Complete=@(args => uploadComplete1(args)) />
+            <RadzenTextBox Name = "image1Cap" @bind-Value=@newShowcase.Image1Caption></RadzenTextBox>
+        </RadzenStack>
+            <RadzenStack Orientation="Orientation.Vertical">
+                <RadzenLabel Text="Second Image and Caption" />
+                <RadzenUpload Auto="false" Error=@(args => uploadError(args)) Multiple="false" class="w-100" Url="https://localhost:7123/image/upload" Complete=@(args => uploadComplete2(args)) />
+                <RadzenTextBox Name="image2Cap" @bind-Value=@newShowcase.Image2Caption></RadzenTextBox>
+            </RadzenStack>
+            <RadzenStack Orientation="Orientation.Vertical">
+                <RadzenLabel Text="Third Image and Caption" />
+                <RadzenUpload Auto="false" Error=@(args => uploadError(args)) Multiple="false" class="w-100" Url="https://localhost:7123/image/upload" Complete=@(args => uploadComplete3(args)) />
+                <RadzenTextBox Name="image3Cap" @bind-Value=@newShowcase.Image3Caption></RadzenTextBox>
+            </RadzenStack>
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Submit" Click="@(()=>createUser(newMentee))"></RadzenButton>
+
+        </RadzenTemplateForm>
+    </RadzenCard>
+</div>
+
+@code {
+    [Inject]
+    public ClientAPI? _api { get; set; }
+
+    public ICollection<Showcase> showcases = new List<Showcase>();
+    private int? currentUserID = CurrentUser._userid;
+    ShowcaseDTO newShowcase = new ShowcaseDTO();
+
+    protected override async Task OnInitializedAsync()
+    {
+        showcases = await _api.ShowcasesAsync(currentUserID);
+    }
+
+
+}
