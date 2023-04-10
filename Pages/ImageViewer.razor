@@ -77,22 +77,6 @@
         }
     }
 
-    public async Task openImageComments(int imageid){
-        try{
-            var imageComments = await _api.MessagesAsync(imageid);
-            if (imageComments != null)
-            {
-                await dialog.OpenAsync<CommentsViewer>($"View Comments", new Dictionary<string, object>() { { null , null } }, new DialogOptions() { Width = "100%", Height = "100%", Resizable = true, Draggable = true });
-            }       
-            else 
-            {
-                var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Warning", Detail = "No existing comments, start a conversation!", Duration = 4000 };
-                notif.Notify(notifMsg);
-            }
-        }catch{
-
-        }
-    }
 
 
     public async Task addComment(string inputComment)
