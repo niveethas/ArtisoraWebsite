@@ -1,0 +1,88 @@
+﻿@page "/showcase"
+@using ArtisoraServer
+@inject NotificationService notif
+@inject NavigationManager nav
+
+
+<RadzenDialog />
+<RadzenNotification />
+<PageTitle>View Showcase</PageTitle>
+
+<div>
+@if (allArtists != null) {
+    <div class="rz-m-10">
+        <div class="rz-p-sm-12 rz-text-align-center">
+            <RadzenDropDown @bind-Value=@selectedValue Data=artistNames Change="@viewShowcase" Style="width: 100%; max-width: 400px;" />
+        </div>
+    </div>
+    
+    @if (showShowcase.Equals("True")){
+        <div class="rz-m-10">
+        <RadzenRow class="rz-text-align-center" Gap="2rem" RowGap="2rem">
+        @foreach(var s in showcases){
+            <RadzenText TextStyle="TextStyle.Overline" TextAlign="TextAlign.Center">Showcase No.: @s.ShowcaseId</RadzenText>
+            <RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Center">@s.SelfDescription</RadzenText>
+            <RadzenColumn Size="5" class=" rz-color-secondary-lighter rz-p-5">
+                            <RadzenStack Orientation="Orientation.Vertical" class="rz-py-5">
+                                <RadzenImage Style="width:300px;" Path="@s.Image1"></RadzenImage>
+                                <RadzenText TextStyle="TextStyle.Caption">@s.Image1Caption</RadzenText>
+                            </RadzenStack>
+            </RadzenColumn>
+            <RadzenColumn  class=" rz-color-secondary-lighter rz-p-5">
+                            <RadzenStack Orientation="Orientation.Vertical" class="rz-py-5">
+                                <RadzenImage Style="width:300px;" Path="@s.Image2"></RadzenImage>
+                                <RadzenText TextStyle="TextStyle.Caption">@s.Image2Caption</RadzenText>
+                            </RadzenStack>
+            </RadzenColumn>
+            <RadzenColumn  class=" rz-color-secondary-lighter rz-p-5">
+                            <RadzenStack Orientation="Orientation.Vertical" class="rz-py-5">
+                                <RadzenImage Style="width:300px;" Path="@s.Image3"></RadzenImage>
+                                <RadzenText TextStyle="TextStyle.Caption">@s.Image3Caption</RadzenText>
+                            </RadzenStack>
+             </RadzenColumn>
+        }
+        </RadzenRow>
+        </div>
+    }
+
+}
+</div>
+
+@code {
+    [Inject]
+    public ClientAPI? _api { get; set; }
+
+    public string selectedValue = "Choose Artist";
+    public List<string> artistNames = new List<string>();
+    public List<int> artistIds = new List<int>();
+    public ICollection<Mentor> allArtists = new List<Mentor>();
+    public string showShowcase = "False";
+    public int selectedArtistId;
+    public ICollection<Showcase> showcases = new List<Showcase>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        //load up artists and view their work
+        try
+        {
+            allArtists = await _api.AllAsync();
+            foreach (var x in allArtists){
+                artistNames.Add(x.FirstName + x.LastName);
+                artistIds.Add(x.MentorId);
+            }
+        }
+        catch{
+            var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Warning", Detail = "No artists to view at this time.", Duration = 4000 };
+            notif.Notify(notifMsg);
+            nav.NavigateTo("/");
+        }
+    }
+
+    //displays the showcases under an artist
+    public async Task viewShowcase(){
+        var position = artistNames.IndexOf(selectedValue);
+        selectedArtistId = artistIds[position];
+        showcases = await _api.ShowcasesAsync(selectedArtistId);
+    }
+}
+
