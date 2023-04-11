@@ -46,20 +46,20 @@
         </RadzenStack>
         <RadzenStack Orientation="Orientation.Vertical">
             <RadzenLabel Text="First Image and Caption" />
-            <RadzenUpload Auto="false" Error=@(args => uploadError(args)) Multiple="false" class="w-100" Url="https://localhost:7123/image/upload" Complete=@(args => uploadComplete1(args)) />
+            <RadzenUpload Auto="true" Error=@(args => uploadError(args)) Multiple="false" class="w-100" Url="https://localhost:7123/showcase/upload" Complete=@(args => uploadComplete1(args)) />
             <RadzenTextBox Name = "image1Cap" @bind-Value=@newShowcase.Image1Caption></RadzenTextBox>
         </RadzenStack>
             <RadzenStack Orientation="Orientation.Vertical">
                 <RadzenLabel Text="Second Image and Caption" />
-                <RadzenUpload Auto="false" Error=@(args => uploadError(args)) Multiple="false" class="w-100" Url="https://localhost:7123/image/upload" Complete=@(args => uploadComplete2(args)) />
+                <RadzenUpload Auto="true" Error=@(args => uploadError(args)) Multiple="false" class="w-100" Url="https://localhost:7123/showcase/upload" Complete=@(args => uploadComplete2(args)) />
                 <RadzenTextBox Name="image2Cap" @bind-Value=@newShowcase.Image2Caption></RadzenTextBox>
             </RadzenStack>
             <RadzenStack Orientation="Orientation.Vertical">
                 <RadzenLabel Text="Third Image and Caption" />
-                <RadzenUpload Auto="false" Error=@(args => uploadError(args)) Multiple="false" class="w-100" Url="https://localhost:7123/image/upload" Complete=@(args => uploadComplete3(args)) />
+                <RadzenUpload Auto="true" Error=@(args => uploadError(args)) Multiple="false" class="w-100" Url="https://localhost:7123/showcase/upload" Complete=@(args => uploadComplete3(args)) />
                 <RadzenTextBox Name="image3Cap" @bind-Value=@newShowcase.Image3Caption></RadzenTextBox>
             </RadzenStack>
-            <RadzenButton ButtonType="ButtonType.Submit" Text="Submit" Click="@(()=>createUser(newMentee))"></RadzenButton>
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Submit" Click="@(()=>createShowcase(newShowcase))"></RadzenButton>
 
         </RadzenTemplateForm>
     </RadzenCard>
@@ -72,11 +72,61 @@
     public ICollection<Showcase> showcases = new List<Showcase>();
     private int? currentUserID = CurrentUser._userid;
     ShowcaseDTO newShowcase = new ShowcaseDTO();
+    public string filePath1, filePath2, filePath3;
 
     protected override async Task OnInitializedAsync()
     {
         showcases = await _api.ShowcasesAsync(currentUserID);
     }
 
+    void uploadError(UploadErrorEventArgs args)
+    {
+        var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Error", Detail = "File submission failed.", Duration = 4000 };
+        notif.Notify(notifMsg);
+    }
 
+    async void uploadComplete1(UploadCompleteEventArgs args)
+    {
+        
+            filePath1 = @"\ShowcaseImages\" + args.RawResponse;
+        
+    }
+
+    async void uploadComplete2(UploadCompleteEventArgs args)
+    {
+        filePath2 = @"\ShowcaseImages\" + args.RawResponse;
+    }
+    async void uploadComplete3(UploadCompleteEventArgs args)
+
+    {
+        filePath3 = @"\ShowcaseImages\" + args.RawResponse;
+    }
+
+
+    public async Task createShowcase(ShowcaseDTO newSC){
+
+        try
+        {
+            var tempSC = new ShowcaseDTO
+                {
+                    Image1 = filePath1,
+                    Image1Caption = newSC.Image1Caption,
+                    Image2 = filePath2,
+                    Image2Caption = newSC.Image2Caption,
+                    Image3 = filePath3,
+                    Image3Caption = newSC.Image3Caption,
+                    SelfDescription = newSC.SelfDescription,
+                    MentorId = (int)currentUserID
+                };
+            await _api.New6Async(tempSC);
+            var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Uploaded!", Detail = "Your upload has been successfully saved!", Duration = 4000 };
+            notif.Notify(notifMsg);
+            nav.NavigateTo("/");
+        }
+        catch (Exception e)
+        {
+            var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "File upload failed to save. Please try again.", Duration = 4000 };
+            notif.Notify(notifMsg);
+        }
+    }
 }
