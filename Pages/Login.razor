@@ -4,6 +4,7 @@
 @inject NavigationManager nav
 
 
+
 <RadzenNotification />
 
 <PageTitle>Login</PageTitle>
@@ -39,6 +40,7 @@
 
 
 
+
     async Task loginUser(LoginArgs la)
     {
         try
@@ -55,7 +57,23 @@
                         CurrentUser._userid = response.MenteeId;
                         CurrentUser._useremail = response.Email;
                         CurrentUser._role = foundPassword.Role;
-                        nav.NavigateTo("/uploader");
+                        int? currentRole = CurrentUser._role;
+                        if (currentRole != null)
+                        {
+
+                            if (currentRole == 1)
+                            {
+                                MainLayout.viewWork = true;
+                                MainLayout.viewUploadWork = true;
+                                MainLayout.viewContact = true;
+                            }
+                            else if (currentRole == 2)
+                            {
+                                MainLayout.viewMs = true;
+                                MainLayout.viewShowcase = true;
+                            }
+                        }
+                        nav.NavigateTo("/imageView");
                     }else{
                         var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Error", Detail = "Incorrect Password", Duration = 4000 };
                         notif.Notify(notifMsg);

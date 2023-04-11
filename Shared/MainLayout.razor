@@ -1,19 +1,4 @@
-﻿@*@inherits LayoutComponentBase
-
-<div class="page">
-    
-
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
-*@
+﻿
 @inherits LayoutComponentBase
 
 <div >
@@ -22,13 +7,15 @@
         <RadzenHeader>
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
                 <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
-                <RadzenLabel Text="ARTISORA" />
-                <RadzenStack Gap="40">
+                <RadzenLink Path="/">
+                    <RadzenLabel Text="ARTISORA" />
+                </RadzenLink>
+                <RadzenStack Gap="20" class="rz-ml-12" AlignItems="AlignItems.End">
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.End" Gap="0">
                         <RadzenButton Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Shade="Shade.Darker">
                             <RadzenLink Path="Login" Text="Login" />
                         </RadzenButton>
-                        <RadzenButton Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Shade="Shade.Darker">
+                        <RadzenButton Variant="Variant.Text" ButtonStyle="ButtonStyle.Info" Shade="Shade.Darker">
                             <RadzenLink Path="Signup" Text="Sign Up" />
                         </RadzenButton>
                     </RadzenStack>
@@ -37,8 +24,15 @@
         </RadzenHeader>
         <RadzenSidebar @bind-Expanded="@sidebarExpanded">
             <RadzenPanelMenu>
-                <RadzenPanelMenuItem Text="Home" Icon="home" Path="Login"/>
-                <RadzenPanelMenuItem Text="Users" Icon="account_box" />
+                <RadzenPanelMenuItem Text="Home" Icon="home" Path="/"/>
+                <RadzenPanelMenuItem Text="Showcase" Icon="" Path="/showcase" />
+            </RadzenPanelMenu>
+            <RadzenPanelMenu >
+                <RadzenPanelMenuItem Visible=@viewWork Text ="View Your Work" Icon="dashboard" Path="/imageView" />
+                <RadzenPanelMenuItem Visible=@viewUploadWork Text ="Upload A File" Icon="note_add" Path="/uploader" />
+                <RadzenPanelMenuItem Visible=@viewContact Text="Contact a mentor" Icon="face" Path="/contactArtist" />
+                <RadzenPanelMenuItem Visible=@viewMs Text ="View Your Mentorships" Icon="class" Path="/imageViewMentor" />
+                <RadzenPanelMenuItem Visible=@viewShowcase Text ="Manage Showcase" Icon="dashboard" Path="/showcaseManager" />
             </RadzenPanelMenu>
         </RadzenSidebar>
         <RadzenBody>
@@ -51,5 +45,26 @@
 </div>
 
 @code {
-    bool sidebarExpanded = true;
+
+    public bool sidebarExpanded = false;
+
+
+    public static bool viewWork = false;
+    public static bool viewUploadWork = false;
+    public static bool viewContact = false;
+    public static bool viewMs = false;
+    public static bool viewShowcase = false;
+
+    //setting up global variables to be accessed by the login function when the user sign in, dynamically adjusting the nav options
+    public bool _viewWork {get { return viewWork; } set{ viewWork = value; }}
+    public bool _viewUploadWork { get { return viewUploadWork; } set { viewUploadWork = value; } }
+    public bool _viewContact { get { return viewContact; } set { viewContact = value; } }
+    public bool _viewMs { get { return viewMs; } set { viewMs = value; } }
+    public bool _viewShowcase { get { return viewShowcase; } set { viewShowcase = value; } }
+   
+    protected override async Task OnInitializedAsync()
+    {
+        
+    }
+
     }
