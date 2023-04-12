@@ -9,11 +9,13 @@
     <div class="row px-3">
         <div class="col-lg-6 offset-lg-3 p-3">
             <RadzenCard>
-
-                <RadzenText TextStyle="TextStyle.Subtitle2" TagName="TagName.H3">Upload Your Work</RadzenText>
-                <RadzenUpload  Auto="true" Error=@(args => uploadError(args)) Multiple="false" class="w-100" Url="https://localhost:7123/image/upload" Complete=@(args => uploadComplete(args)) />
-@*                <RadzenButton Text="Submit" Click=@(args => upload.Upload()) class="d-block mt-4" />
-*@            </RadzenCard>
+                <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center">
+                    <RadzenText TextStyle="TextStyle.H4">Upload Your Work</RadzenText>
+                    <RadzenText TextStyle="TextStyle.Body1">Select an image to upload so your mentor can view your work.</RadzenText>
+                    <RadzenUpload Auto="true" Error=@(args => uploadError(args)) Multiple="false" class="w-100" Url="https://localhost:7123/image/upload" Complete=@(args => uploadComplete(args)) />
+                </RadzenStack>
+                
+            </RadzenCard>
         </div>
     </div>
 </div>
