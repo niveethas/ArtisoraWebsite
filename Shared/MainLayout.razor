@@ -25,14 +25,14 @@
         <RadzenSidebar @bind-Expanded="@sidebarExpanded">
             <RadzenPanelMenu>
                 <RadzenPanelMenuItem Text="Home" Icon="home" Path="/"/>
-                <RadzenPanelMenuItem Text="Showcase" Icon="" Path="/showcase" />
+                <RadzenPanelMenuItem Text="Showcase" Icon="dashboard" Path="/showcase" />
             </RadzenPanelMenu>
             <RadzenPanelMenu >
                 <RadzenPanelMenuItem Visible=@viewWork Text ="View Your Work" Icon="dashboard" Path="/imageView" />
                 <RadzenPanelMenuItem Visible=@viewUploadWork Text ="Upload A File" Icon="note_add" Path="/uploader" />
                 <RadzenPanelMenuItem Visible=@viewContact Text="Contact a mentor" Icon="face" Path="/contactArtist" />
                 <RadzenPanelMenuItem Visible=@viewMs Text ="View Your Mentorships" Icon="class" Path="/imageViewMentor" />
-                <RadzenPanelMenuItem Visible=@viewShowcase Text ="Manage Showcase" Icon="dashboard" Path="/showcaseManager" />
+                <RadzenPanelMenuItem Visible=@viewShowcase Text ="Manage Showcase" Icon="build" Path="/showcaseManager" />
             </RadzenPanelMenu>
         </RadzenSidebar>
         <RadzenBody>
