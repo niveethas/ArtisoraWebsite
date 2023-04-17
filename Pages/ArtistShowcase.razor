@@ -20,15 +20,18 @@
         <div class="rz-m-10">
         <RadzenRow class="rz-text-align-center" Gap="2rem" RowGap="2rem">
         @foreach(var s in showcases){
+            <RadzenCard >
+            <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center">
             <RadzenText TextStyle="TextStyle.Overline" TextAlign="TextAlign.Center">Showcase No.: @s.ShowcaseId</RadzenText>
             <RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Center">@s.SelfDescription</RadzenText>
-            <RadzenColumn Size="5" class=" rz-color-secondary-lighter rz-p-5">
+            </RadzenStack>
+            <RadzenColumn class=" rz-color-secondary-lighter rz-p-5">
                             <RadzenStack Orientation="Orientation.Vertical" class="rz-py-5">
                                 <RadzenImage Style="width:300px;" Path="@s.Image1"></RadzenImage>
                                 <RadzenText TextStyle="TextStyle.Caption">@s.Image1Caption</RadzenText>
                             </RadzenStack>
             </RadzenColumn>
-            <RadzenColumn  class=" rz-color-secondary-lighter rz-p-5">
+            <RadzenColumn class=" rz-color-secondary-lighter rz-p-5">
                             <RadzenStack Orientation="Orientation.Vertical" class="rz-py-5">
                                 <RadzenImage Style="width:300px;" Path="@s.Image2"></RadzenImage>
                                 <RadzenText TextStyle="TextStyle.Caption">@s.Image2Caption</RadzenText>
@@ -40,6 +43,7 @@
                                 <RadzenText TextStyle="TextStyle.Caption">@s.Image3Caption</RadzenText>
                             </RadzenStack>
              </RadzenColumn>
+             </RadzenCard>
         }
         </RadzenRow>
         </div>
@@ -67,7 +71,7 @@
         {
             allArtists = await _api.AllAsync();
             foreach (var x in allArtists){
-                artistNames.Add(x.FirstName + x.LastName);
+                artistNames.Add(x.FirstName +" "+x.LastName);
                 artistIds.Add(x.MentorId);
             }
         }
@@ -83,6 +87,7 @@
         var position = artistNames.IndexOf(selectedValue);
         selectedArtistId = artistIds[position];
         showcases = await _api.ShowcasesAsync(selectedArtistId);
+        showShowcase = "True";
     }
 }
 
