@@ -101,18 +101,21 @@
 
     async Task createUser(UserRegDTO newuser)
     {
-        if ((Regex.IsMatch(newuser.Password, "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[#$%^&+=])(?=\\S+$).{6,}$"))&&(newuser.Password.Equals(RePassword)))
+        if ((Regex.IsMatch(newuser.Password, "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[#$%^&+=@])(?=\\S+$).{6,}$"))&&(newuser.Password.Equals(RePassword)))
         {
             try
             {
                 if (roleSwitch){
                     newuser.Role = 2;
+                    await _api.New3Async(newuser.FirstName, newuser.LastName, newuser.Email, newuser.Password, newuser.Role);
                 }else{
                     newuser.Role = 1;
+                    await _api.NewAsync(newuser);
+
                 }
-                await _api.NewAsync(newuser);
                 clearForm();
-                var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Registration Complete!", Detail = "Use your new accoun to sign in!", Duration = 4000 };
+                var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Registration Complete!", Detail = "Use your new account to sign in!", Duration = 4000 };
+                notif.Notify(notifMsg);
                 nav.NavigateTo("/login");
             }
             catch{
@@ -134,5 +137,6 @@
         RePassword = string.Empty;
         newMentee.FirstName = string.Empty;
         newMentee.LastName = string.Empty;
+        roleSwitch = false;
     }
 }
