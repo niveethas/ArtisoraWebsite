@@ -10,11 +10,12 @@
 <div class="rz-m-10">
     @if (showcases != null)
     {
+        <RadzenText TextStyle="TextStyle.H4" TextAlign="TextAlign.Center">View Your Showcases</RadzenText>
         <RadzenRow class="rz-text-align-center" Gap="2rem" RowGap="2rem">
             @foreach (var s in showcases)
             {
                 <RadzenText TextStyle="TextStyle.Overline" TextAlign="TextAlign.Center">Showcase No.: @s.ShowcaseId</RadzenText>
-                <RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Center">@s.SelfDescription</RadzenText>
+                <RadzenText TextStyle="TextStyle.Body1" TextAlign="TextAlign.Center">@s.SelfDescription</RadzenText>
                 <RadzenColumn Size="5" class=" rz-color-secondary-lighter rz-p-5">
                     <RadzenStack Orientation="Orientation.Vertical" class="rz-py-5">
                         <RadzenImage Style="width:300px;" Path="@s.Image1"></RadzenImage>
@@ -42,27 +43,26 @@
         <RadzenText TextAlign="TextAlign.Center" TextStyle="TextStyle.H4">Add New Showcase</RadzenText>
         <RadzenText TextAlign="TextAlign.Center" TextStyle="TextStyle.Caption" class="rz-color-danger">* All fields are required.</RadzenText>
         <RadzenTemplateForm TItem="ShowcaseDTO" Data="newShowcase">
-        <RadzenStack Orientation="Orientation.Vertical">
+        <RadzenStack Orientation="Orientation.Vertical" class="rz-my-4">
             <RadzenLabel Text="Enter Self-Description" />
             <RadzenText TextStyle ="TextStyle.Caption">Ensure to add your email and other contact details. Describe the showcase content and what skills you will provide.</RadzenText>
             <RadzenTextBox Name="description" @bind-Value=@newShowcase.SelfDescription></RadzenTextBox>
         </RadzenStack>
-        <RadzenStack Orientation="Orientation.Vertical">
+            <RadzenStack Orientation="Orientation.Vertical" class="rz-my-4">
             <RadzenLabel Text="First Image and Caption" />
             <RadzenUpload Auto="true" Error=@(args => uploadError(args)) Multiple="false" class="w-100" Url="https://localhost:7123/showcase/upload" Complete=@(args => uploadComplete1(args)) />
             <RadzenTextBox Name = "image1Cap" @bind-Value=@newShowcase.Image1Caption></RadzenTextBox>
         </RadzenStack>
-            <RadzenStack Orientation="Orientation.Vertical">
+            <RadzenStack Orientation="Orientation.Vertical" class="rz-my-4">
                 <RadzenLabel Text="Second Image and Caption" />
                 <RadzenUpload Auto="true" Error=@(args => uploadError(args)) Multiple="false" class="w-100" Url="https://localhost:7123/showcase/upload" Complete=@(args => uploadComplete2(args)) />
                 <RadzenTextBox Name="image2Cap" @bind-Value=@newShowcase.Image2Caption></RadzenTextBox>
                 
             </RadzenStack>
-            <RadzenStack Orientation="Orientation.Vertical">
+            <RadzenStack Orientation="Orientation.Vertical" class="rz-my-4">
                 <RadzenLabel Text="Third Image and Caption" />
                 <RadzenUpload Auto="true" Error=@(args => uploadError(args)) Multiple="false" class="w-100" Url="https://localhost:7123/showcase/upload" Complete=@(args => uploadComplete3(args)) />
                 <RadzenTextBox Name="image3Cap" @bind-Value=@newShowcase.Image3Caption></RadzenTextBox>
-                
             </RadzenStack>
             <RadzenButton ButtonType="ButtonType.Submit" Text="Save New Showcase" Click="@(()=>createShowcase(newShowcase))"></RadzenButton>
 

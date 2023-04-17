@@ -11,7 +11,9 @@
 <div>
 @if (allArtists != null) {
     <div class="rz-m-10">
+            <RadzenText TextStyle="TextStyle.H4" TextAlign="TextAlign.Center">View Our Mentors' Work!</RadzenText>
         <div class="rz-p-sm-12 rz-text-align-center">
+            <RadzenText TextStyle="TextStyle.Caption">Select an artist to view their showcase.</RadzenText>
             <RadzenDropDown @bind-Value=@selectedValue Data=artistNames Change="@viewShowcase" Style="width: 100%; max-width: 400px;" />
         </div>
     </div>
