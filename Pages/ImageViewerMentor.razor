@@ -26,7 +26,7 @@
             <RadzenColumn Size="6" class="rz-shadow-5 rz-border-radius-6 rz-color-secondary-lighter rz-p-5">
                <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" Gap="20" class="rz-py-5">
                 <RadzenImage Class="rz-border-radius-4 rz-m-6" Style=" width:300px;" Path="@selectedImagePath"></RadzenImage>
-                  <RadzenTextArea @bind-Value=@newComment Placeholder="Add a new comment here..."></RadzenTextArea>
+                        <RadzenTextArea @bind-Value=@newComment Cols="30" Rows="3" Placeholder="Add a new comment here..."></RadzenTextArea>
                     <RadzenButton Text="Add New Comment" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Secondary" ButtonType="ButtonType.Submit" Click="() => addComment(newComment)" />
                </RadzenStack>
             </RadzenColumn>

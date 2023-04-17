@@ -22,7 +22,7 @@
         <div class="rz-m-10">
         <RadzenRow class="rz-text-align-center" Gap="2rem" RowGap="2rem">
         @foreach(var s in showcases){
-            <RadzenCard >
+                        <RadzenCard class="rz-shadow-10 rz-border-radius-6 rz-p-12">
             <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center">
             <RadzenText TextStyle="TextStyle.Overline" TextAlign="TextAlign.Center">Showcase No.: @s.ShowcaseId</RadzenText>
             <RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Center">@s.SelfDescription</RadzenText>

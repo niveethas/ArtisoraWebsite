@@ -14,6 +14,7 @@
         <RadzenRow class="rz-text-align-center" Gap="2rem" RowGap="2rem">
             @foreach (var s in showcases)
             {
+                <RadzenCard class="rz-shadow-10 rz-border-radius-6 rz-p-12">
                 <RadzenText TextStyle="TextStyle.Overline" TextAlign="TextAlign.Center">Showcase No.: @s.ShowcaseId</RadzenText>
                 <RadzenText TextStyle="TextStyle.Body1" TextAlign="TextAlign.Center">@s.SelfDescription</RadzenText>
                 <RadzenColumn Size="5" class=" rz-color-secondary-lighter rz-p-5">
@@ -34,12 +35,13 @@
                         <RadzenText TextStyle="TextStyle.Caption">@s.Image3Caption</RadzenText>
                     </RadzenStack>
                 </RadzenColumn>
+                </RadzenCard>
             }
         </RadzenRow>
     }else{
         <RadzenText TextAlign="TextAlign.Left" TextStyle="TextStyle.Subtitle1">You have not added any showcases yet! Please add a showcase below to be displayed publicly!</RadzenText>
     }
-    <RadzenCard Class="rz-shadow-10 rz-border-radius-0 rz-p-12">
+    <RadzenCard Class="rz-shadow-10 rz-border-radius-6 rz-p-12">
         <RadzenText TextAlign="TextAlign.Center" TextStyle="TextStyle.H4">Add New Showcase</RadzenText>
         <RadzenText TextAlign="TextAlign.Center" TextStyle="TextStyle.Caption" class="rz-color-danger">* All fields are required.</RadzenText>
         <RadzenTemplateForm TItem="ShowcaseDTO" Data="newShowcase">
