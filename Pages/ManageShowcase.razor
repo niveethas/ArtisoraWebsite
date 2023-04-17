@@ -36,13 +36,16 @@
             }
         </RadzenRow>
     }else{
-        <RadzenText TextAlign="TextAlign.Left" TextStyle="TextStyle.Subtitle1">You have not added any showcases yet! Please add a showcase below to be displayed publically!</RadzenText>
+        <RadzenText TextAlign="TextAlign.Left" TextStyle="TextStyle.Subtitle1">You have not added any showcases yet! Please add a showcase below to be displayed publicly!</RadzenText>
     }
-    <RadzenCard Class="rz-shadow-0 rz-border-radius-0 rz-p-12">
+    <RadzenCard Class="rz-shadow-10 rz-border-radius-0 rz-p-12">
+        <RadzenText TextAlign="TextAlign.Center" TextStyle="TextStyle.H4">Add New Showcase</RadzenText>
+        <RadzenText TextAlign="TextAlign.Center" TextStyle="TextStyle.Caption" class="rz-color-danger">* All fields are required.</RadzenText>
         <RadzenTemplateForm TItem="ShowcaseDTO" Data="newShowcase">
         <RadzenStack Orientation="Orientation.Vertical">
-            <RadzenLabel Text="Third Image and Caption" />
-            <RadzenTextBox Name="description" @bind-Value =@newShowcase.SelfDescription></RadzenTextBox>
+            <RadzenLabel Text="Enter Self-Description" />
+            <RadzenText TextStyle ="TextStyle.Caption">Ensure to add your email and other contact details. Describe the showcase content and what skills you will provide.</RadzenText>
+            <RadzenTextBox Name="description" @bind-Value=@newShowcase.SelfDescription></RadzenTextBox>
         </RadzenStack>
         <RadzenStack Orientation="Orientation.Vertical">
             <RadzenLabel Text="First Image and Caption" />
@@ -53,15 +56,29 @@
                 <RadzenLabel Text="Second Image and Caption" />
                 <RadzenUpload Auto="true" Error=@(args => uploadError(args)) Multiple="false" class="w-100" Url="https://localhost:7123/showcase/upload" Complete=@(args => uploadComplete2(args)) />
                 <RadzenTextBox Name="image2Cap" @bind-Value=@newShowcase.Image2Caption></RadzenTextBox>
+                
             </RadzenStack>
             <RadzenStack Orientation="Orientation.Vertical">
                 <RadzenLabel Text="Third Image and Caption" />
                 <RadzenUpload Auto="true" Error=@(args => uploadError(args)) Multiple="false" class="w-100" Url="https://localhost:7123/showcase/upload" Complete=@(args => uploadComplete3(args)) />
                 <RadzenTextBox Name="image3Cap" @bind-Value=@newShowcase.Image3Caption></RadzenTextBox>
+                
             </RadzenStack>
-            <RadzenButton ButtonType="ButtonType.Submit" Text="Submit" Click="@(()=>createShowcase(newShowcase))"></RadzenButton>
+            <RadzenButton ButtonType="ButtonType.Submit" Text="Save New Showcase" Click="@(()=>createShowcase(newShowcase))"></RadzenButton>
 
         </RadzenTemplateForm>
+        @*@if (showI1.Equals("True"))
+        {
+            <RadzenImage Path="@filePath1" Style="width:300px;"></RadzenImage>
+        }
+        @if (showI2.Equals("True"))
+        {
+            <RadzenImage Path="@filePath2" Style="width:300px;"></RadzenImage>
+        }
+        @if (showI3.Equals("True"))
+        {
+            <RadzenImage Path="@filePath3" Style="width:300px;"></RadzenImage>
+        }*@
     </RadzenCard>
 </div>
 
@@ -69,14 +86,24 @@
     [Inject]
     public ClientAPI? _api { get; set; }
 
-    public ICollection<Showcase> showcases = new List<Showcase>();
-    private int? currentUserID = CurrentUser._userid;
+    public ICollection<Showcase>? showcases = new List<Showcase>();
+    public int? currentUserID = CurrentUser._userid;
     ShowcaseDTO newShowcase = new ShowcaseDTO();
-    public string filePath1, filePath2, filePath3;
+    public string? filePath1, filePath2, filePath3;
+    public string? showI1, showI2, showI3 = "False";
 
     protected override async Task OnInitializedAsync()
     {
-        showcases = await _api.ShowcasesAsync(currentUserID);
+        try
+        {
+            showcases = await _api.ShowcasesAsync(currentUserID);
+            Console.WriteLine(currentUserID);
+        }
+        catch (Exception x){
+            showcases = null;
+            Console.WriteLine(x);
+        }
+
     }
 
     void uploadError(UploadErrorEventArgs args)
@@ -87,45 +114,60 @@
 
     async void uploadComplete1(UploadCompleteEventArgs args)
     {
-        
-            filePath1 = @"\ShowcaseImages\" + args.RawResponse;
-        
+
+        filePath1 = @"\ShowcaseImages\" + args.RawResponse;
+        showI1 = "True";
+        var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Updated", Detail = "Image 1 has been saved, add caption.", Duration = 4000 };
+        notif.Notify(notifMsg);
     }
 
     async void uploadComplete2(UploadCompleteEventArgs args)
     {
         filePath2 = @"\ShowcaseImages\" + args.RawResponse;
+        showI2 = "True";
+        var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Updated", Detail = "Image 2 has been saved, add caption.", Duration = 4000 };
+        notif.Notify(notifMsg);
     }
     async void uploadComplete3(UploadCompleteEventArgs args)
 
     {
         filePath3 = @"\ShowcaseImages\" + args.RawResponse;
+        showI3 = "True";
+        var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Updated", Detail = "Image 3 has been saved, add caption.", Duration = 4000 };
+        notif.Notify(notifMsg);
     }
 
 
     public async Task createShowcase(ShowcaseDTO newSC){
-
-        try
-        {
-            var tempSC = new ShowcaseDTO
-                {
-                    Image1 = filePath1,
-                    Image1Caption = newSC.Image1Caption,
-                    Image2 = filePath2,
-                    Image2Caption = newSC.Image2Caption,
-                    Image3 = filePath3,
-                    Image3Caption = newSC.Image3Caption,
-                    SelfDescription = newSC.SelfDescription,
-                    MentorId = (int)currentUserID
-                };
-            await _api.New6Async(tempSC);
-            var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Uploaded!", Detail = "Your upload has been successfully saved!", Duration = 4000 };
-            notif.Notify(notifMsg);
-            nav.NavigateTo("/");
-        }
-        catch (Exception e)
-        {
-            var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "File upload failed to save. Please try again.", Duration = 4000 };
+        if (newSC.Image1Caption != string.Empty && newSC.Image2Caption != string.Empty && newSC.Image3Caption != string.Empty && newSC.SelfDescription != string.Empty) {
+            try
+            {
+                var tempSC = new ShowcaseDTO
+                    {
+                        Image1 = filePath1,
+                        Image1Caption = newSC.Image1Caption,
+                        Image2 = filePath2,
+                        Image2Caption = newSC.Image2Caption,
+                        Image3 = filePath3,
+                        Image3Caption = newSC.Image3Caption,
+                        SelfDescription = newSC.SelfDescription,
+                        MentorId = currentUserID.Value
+                    };
+                await _api.New6Async(tempSC);
+                var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Uploaded!", Detail = "Your upload has been successfully saved!", Duration = 4000 };
+                notif.Notify(notifMsg);
+                showI1 = "False";
+                showI2 = "False";
+                showI3 = "False";
+                nav.NavigateTo("/showcase");
+            }
+            catch (Exception e)
+            {
+                var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "File upload failed to save. Please try again.", Duration = 4000 };
+                notif.Notify(notifMsg);
+            }
+        }else {
+            var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Empty Values", Detail = "Please fill in every field. Please try again.", Duration = 4000 };
             notif.Notify(notifMsg);
         }
     }
