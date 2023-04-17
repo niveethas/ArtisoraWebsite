@@ -33,10 +33,11 @@
                 <RadzenPanelMenuItem Visible=@viewContact Text="Contact a mentor" Icon="face" Path="/contactArtist" />
                 <RadzenPanelMenuItem Visible=@viewMs Text ="View Your Mentorships" Icon="class" Path="/imageViewMentor" />
                 <RadzenPanelMenuItem Visible=@viewShowcase Text ="Manage Showcase" Icon="build" Path="/showcaseManager" />
+                <RadzenPanelMenuItem Visible=@viewAddMs Text="Add Mentorship" Icon="add" Path="/addMentorship" />
             </RadzenPanelMenu>
         </RadzenSidebar>
         <RadzenBody>
-            <div class="rz-p-4">
+            <div class="rz-px-8 rz-py-4 rz-mx-lg-12">
                 @Body
             </div>
         </RadzenBody>
@@ -54,6 +55,7 @@
     public static bool viewContact = false;
     public static bool viewMs = false;
     public static bool viewShowcase = false;
+    public static bool viewAddMs = false;
 
     //setting up global variables to be accessed by the login function when the user sign in, dynamically adjusting the nav options
     public bool _viewWork {get { return viewWork; } set{ viewWork = value; }}
@@ -61,6 +63,8 @@
     public bool _viewContact { get { return viewContact; } set { viewContact = value; } }
     public bool _viewMs { get { return viewMs; } set { viewMs = value; } }
     public bool _viewShowcase { get { return viewShowcase; } set { viewShowcase = value; } }
+    public bool _viewAddShowcase { get { return viewAddMs; } set { viewAddMs = value; } }
+
    
     protected override async Task OnInitializedAsync()
     {

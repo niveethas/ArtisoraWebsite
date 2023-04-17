@@ -37,7 +37,8 @@
 
     public string inputEmail;
     public string inputPassword;
-
+    public Mentor? responseMr;
+    public Mentee? response;
 
 
 
@@ -45,8 +46,21 @@
     {
         try
         {
-            var response = await _api.MenteeAsync(la.Username);
-            var responseMr = await _api.MentorAsync(la.Username);
+            response = await _api.MenteeAsync(la.Username);
+        }
+        catch
+        {
+
+        }
+        try{
+
+            responseMr = await _api.MentorAsync(la.Username);
+
+        }catch{
+
+        }
+        try
+        {
             if ((response != null)&&(responseMr == null))
             {
                 try
@@ -71,6 +85,7 @@
                             {
                                 MainLayout.viewMs = true;
                                 MainLayout.viewShowcase = true;
+                                MainLayout.viewAddMs = true;
                             }
                         }
                         nav.NavigateTo("/imageView");
@@ -93,7 +108,24 @@
                         CurrentUser._userid = responseMr.MentorId;
                         CurrentUser._useremail = responseMr.Email;
                         CurrentUser._role = foundPassword.Role;
-                        nav.NavigateTo("/");
+                        int? currentRole = CurrentUser._role;
+                        if (currentRole != null)
+                        {
+
+                            if (currentRole == 1)
+                            {
+                                MainLayout.viewWork = true;
+                                MainLayout.viewUploadWork = true;
+                                MainLayout.viewContact = true;
+                            }
+                            else if (currentRole == 2)
+                            {
+                                MainLayout.viewMs = true;
+                                MainLayout.viewShowcase = true;
+                                MainLayout.viewAddMs = true;
+                            }
+                        }
+                        nav.NavigateTo("/imageViewMentor");
                     }
                     else
                     {

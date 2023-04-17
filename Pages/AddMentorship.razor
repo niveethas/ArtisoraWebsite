@@ -1,0 +1,87 @@
+﻿@page "/addMentorship"
+@using ArtisoraServer
+@inject NotificationService notif
+@inject NavigationManager nav
+
+<RadzenNotification />
+<PageTitle>Add Mentorship</PageTitle>
+
+
+<div class="rz-m-10">
+    <RadzenCard class="rz-shadow-10 rz-border-radius-6 rz-p-12">
+    <RadzenText TextStyle="TextStyle.H4" TextAlign="TextAlign.Center">Add a new Mentorship</RadzenText>
+    <RadzenTemplateForm TItem="localMentorshipDTO" Data="newMs">
+        <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center">
+        <RadzenLabel Text="Select a mentee to begin a mentorship with!"></RadzenLabel>
+        <RadzenText TextStyle="TextStyle.Caption" class="rz-color-danger" Text="A mentee can only exist in one mentorship at a time."></RadzenText>
+        <RadzenDropDown @bind-Value=@selectedValue Data=menteeNames Style="width: 100%; max-width: 400px;" />
+        <RadzenButton class="rz-my-4" ButtonStyle="ButtonStyle.Primary" Click="@(()=>addMentorship())" Text="Create Mentorship"></RadzenButton>
+        </RadzenStack>
+    </RadzenTemplateForm>
+    </RadzenCard>
+</div>
+
+@code{
+    [Inject]
+    public ClientAPI? _api { get; set; }
+    public string selectedValue = "Choose Mentee";
+    public ICollection<Mentee> allMentees = new List<Mentee>();
+    public List<string> menteeNames = new List<string>();
+    public List<int> menteeIds = new List<int>();
+    public int selectedMenteeId;
+    public int? currentUserID = CurrentUser._userid;
+
+
+    public class localMentorshipDTO{
+
+        public int menteeId { get; set; }
+        public int mentorId { get; set; }
+    }
+
+    localMentorshipDTO newMs = new localMentorshipDTO();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try{
+            allMentees = await _api.AllAllAsync();
+            foreach (var x in allMentees)
+            {
+                menteeNames.Add(x.FirstName + " " + x.LastName);
+                //display the dropdown menu with full user's names
+                menteeIds.Add(x.MenteeId);
+            }
+        }catch{
+            var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "No mentees to add to mentorships at this time.", Duration = 4000 };
+            notif.Notify(notifMsg);
+            nav.NavigateTo("/imageViewMentor");
+        }
+    }
+
+    public async Task addMentorship(){
+        var position = menteeNames.IndexOf(selectedValue);
+        selectedMenteeId = menteeIds[position];
+        Mentorship temp = new Mentorship();
+        try{
+            temp = await _api.MenteeidAsync(selectedMenteeId);
+            var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Warning", Detail = "Mentorship not created. Mentee already exists in mentorship.", Duration = 4000 };
+            notif.Notify(notifMsg);
+            //if the mentee already exists in a mentorship the mentorship is not created
+        }catch (Exception x){
+            try
+            {
+                await _api.New4Async(selectedMenteeId, currentUserID.Value);
+                var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Success", Detail = "Mentorship Created! The student can now upload work.", Duration = 4000 };
+                notif.Notify(notifMsg);
+                selectedValue = "Choose Mentee";
+            }
+            catch
+            {
+                var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Error", Detail = "New mentorship could not be created.", Duration = 4000 };
+                notif.Notify(notifMsg);
+            }
+        }
+
+        
+    }
+    
+}
