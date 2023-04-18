@@ -18,6 +18,8 @@
                 <RadzenText TextStyle="TextStyle.H5" TagName="TagName.H2" Class="rz-mb-6">
                     Sign Up
                 </RadzenText>
+                <RadzenText TextAlign="TextAlign.Center" TextStyle="TextStyle.Caption" class="rz-color-danger">* All fields are required.</RadzenText>
+
                 <RadzenTemplateForm TItem="UserRegDTO" Data="newMentee">
 
                     <RadzenStack Orientation="Orientation.Vertical" Gap="20" class="rz-py-5">
@@ -36,7 +38,7 @@
                                  <RadzenText TextStyle="TextStyle.Caption"> Have at least one uppercase, lowercase and numerical character</RadzenText>
                             </li>
                             <li>
-                                 <RadzenText TextStyle="TextStyle.Caption"> Have at least one special character from: #,$,%,^,&,+,=</RadzenText>
+                                 <RadzenText TextStyle="TextStyle.Caption"> Have at least one special character from: #,$,%,^,&,+,@@,=</RadzenText>
                             </li>
                         </ul>
                         <RadzenPassword @bind-Value=@newMentee.Password />
