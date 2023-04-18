@@ -26,19 +26,19 @@
                         </RadzenStack>
                         <RadzenColumn class=" rz-color-secondary-lighter rz-p-5">
                             <RadzenStack Orientation="Orientation.Vertical" class="rz-py-5">
-                                <RadzenImage Style="width:300px;" Path="@s.Image1"></RadzenImage>
+                                            <RadzenImage Style="max-width:100%;" Path="@s.Image1"></RadzenImage>
                                 <RadzenText TextStyle="TextStyle.Caption">@s.Image1Caption</RadzenText>
                             </RadzenStack>
                         </RadzenColumn>
                         <RadzenColumn  class=" rz-color-secondary-lighter rz-p-5">
                             <RadzenStack Orientation="Orientation.Vertical" class="rz-py-5">
-                                <RadzenImage Style="width:300px;" Path="@s.Image2"></RadzenImage>
+                                            <RadzenImage Style="max-width:100%;" Path="@s.Image2"></RadzenImage>
                                 <RadzenText TextStyle="TextStyle.Caption">@s.Image2Caption</RadzenText>
                             </RadzenStack>
                         </RadzenColumn>
                         <RadzenColumn  class=" rz-color-secondary-lighter rz-p-5">
                             <RadzenStack Orientation="Orientation.Vertical" class="rz-py-5">
-                                <RadzenImage Style="width:300px;" Path="@s.Image3"></RadzenImage>
+                                            <RadzenImage Style="max-width:100%;" Path="@s.Image3"></RadzenImage>
                                 <RadzenText TextStyle="TextStyle.Caption">@s.Image3Caption</RadzenText>
                             </RadzenStack>
                         </RadzenColumn>
@@ -139,8 +139,9 @@
     {
 
         filePath1 = @"\ShowcaseImages\" + args.RawResponse;
-        showI1 = "True";
-        var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Info, Summary = "Updated", Detail = "Image 1 has been saved, add caption.", Duration = 4000 };
+        var notifMsg = new NotificationMessage
+            {
+                Style = "position:absolute;bottom: 0; " , Severity = NotificationSeverity.Info, Summary = "Updated", Detail = "Image 1 has been saved, add caption.", Duration = 4000 };
         notif.Notify(notifMsg);
     }
 
@@ -165,6 +166,9 @@
         if (newSC.Image1Caption != string.Empty && newSC.Image2Caption != string.Empty && newSC.Image3Caption != string.Empty && newSC.SelfDescription != string.Empty) {
             try
             {
+                var currentEmail = CurrentUser._useremail;
+                int mentorid = await _api.Id3Async(currentEmail);
+
                 var tempSC = new ShowcaseDTO
                     {
                         Image1 = filePath1,
@@ -174,7 +178,7 @@
                         Image3 = filePath3,
                         Image3Caption = newSC.Image3Caption,
                         SelfDescription = newSC.SelfDescription,
-                        MentorId = currentUserID.Value
+                        MentorId = mentorid
                     };
                 await _api.New6Async(tempSC);
                 var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Uploaded!", Detail = "Your upload has been successfully saved!", Duration = 4000 };
