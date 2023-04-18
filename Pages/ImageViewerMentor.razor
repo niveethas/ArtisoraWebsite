@@ -36,6 +36,7 @@
                 <RadzenImage Class="rz-border-radius-4 rz-m-6" Style=" width:300px;" Path="@selectedImagePath"></RadzenImage>
                         <RadzenTextArea @bind-Value=@newComment Cols="30" Rows="3" Placeholder="Add a new comment here..."></RadzenTextArea>
                     <RadzenButton Text="Add New Comment" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Secondary" ButtonType="ButtonType.Submit" Click="() => addComment(newComment)" />
+                                <RadzenButton Text="Delete Upload" Icon="" ButtonStyle="ButtonStyle.Danger" ButtonType="ButtonType.Button" Click=@deleteImage></RadzenButton>
                </RadzenStack>
             </RadzenColumn>
             <RadzenColumn >
@@ -159,6 +160,24 @@
         }
             showImage = "True";
 
+    }
+
+    public async Task deleteImage()
+    {
+        try
+        {
+            await _api.DeleteAsync(selectedImageId);
+
+            allWorks = await _api.ImagesAsync(currentUserID);
+            showImage = "False";
+            selectedValue = "Image names";
+            newComment = string.Empty;
+            //delete image and reload the page
         }
+        catch
+        {
+
+        }
+    }
     
 }
