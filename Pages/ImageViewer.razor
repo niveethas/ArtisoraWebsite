@@ -22,7 +22,7 @@
             <RadzenRow class="rz-text-align-center" Gap="2rem" RowGap="1rem">
             <RadzenColumn Size="6" class="rz-shadow-5 rz-border-radius-6 rz-color-secondary-lighter rz-p-5">
                <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" Gap="20" class="rz-py-5">
-                <RadzenImage Class="rz-border-radius-4 rz-m-6" Style=" width:300px;" Path="@selectedImagePath"></RadzenImage>
+                        <RadzenImage Class="rz-border-radius-4 rz-m-6" Style=" max-width:100%;" Path="@selectedImagePath"></RadzenImage>
                   <RadzenTextArea @bind-Value=@newComment Placeholder="Add a new comment here..."></RadzenTextArea>
                     <RadzenButton Text="Add New Comment" Icon="add_circle_outline" ButtonStyle="ButtonStyle.Secondary" ButtonType="ButtonType.Submit" Click="() => addComment(newComment)" />
                     <RadzenButton Text="Delete Upload" Icon="" ButtonStyle="ButtonStyle.Danger" ButtonType="ButtonType.Button" Click=@deleteImage></RadzenButton>

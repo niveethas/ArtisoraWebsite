@@ -28,6 +28,8 @@
                     }
         </RadzenStack>
         </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow class="rz-my-3 rz-mt-12 rz-border-radius-6 rz-shadow-0" Gap="0">
         <RadzenColumn>
         @if (showImage.Equals("True")){
             <RadzenRow class="rz-text-align-center" Gap="2rem" RowGap="1rem">
@@ -43,7 +45,7 @@
                <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" Gap="1" class="rz-py-5">
                    @if (allComments != null){
                         @foreach(var n in allComments){
-                                <RadzenText TextStyle="TextStyle.Body1" class="rz-border-secondary-light rz-p-1 rz-mb-2">
+                                        <RadzenText TextStyle="TextStyle.Body1" class="rz-p-12 rz-p-sm-3 rz-my-3 rz-border-radius-6 rz-shadow-3">
                                 @n.TextContent
                             </RadzenText>
                         }
