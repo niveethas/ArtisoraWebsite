@@ -74,7 +74,10 @@
                         int? currentRole = CurrentUser._role;
                         if (currentRole != null)
                         {
-
+                            //change the nav menu to hide options based on role, and change header for all logged in users
+                            MainLayout.viewSu = false;
+                            MainLayout.viewSo = true;
+                            MainLayout.viewLi = false;
                             if (currentRole == 1)
                             {
                                 MainLayout.viewWork = true;
@@ -111,6 +114,9 @@
                         int? currentRole = CurrentUser._role;
                         if (currentRole != null)
                         {
+                            MainLayout.viewSu = false;
+                            MainLayout.viewSo = true;
+                            MainLayout.viewLi = false;
 
                             if (currentRole == 1)
                             {

@@ -1,22 +1,24 @@
-﻿
+﻿@inject NavigationManager nav
 @inherits LayoutComponentBase
 
 <div >
 @*    Full Height sidebar : https://blazor.radzen.com/layout *@    
     <RadzenLayout Style=" grid-template-areas: 'rz-sidebar rz-header' 'rz-sidebar rz-body'">
         <RadzenHeader>
-            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
-                <RadzenSidebarToggle Click="@(() => sidebarExpanded = !sidebarExpanded)" />
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0" JustifyContent="JustifyContent.SpaceBetween">
+                <RadzenSidebarToggle class="rz-mr-10" Click="@(() => sidebarExpanded = !sidebarExpanded)" />
                 <RadzenLink Path="/">
                     <RadzenLabel Text="ARTISORA" />
                 </RadzenLink>
-                <RadzenStack Gap="20" class="rz-ml-12" AlignItems="AlignItems.End">
+                <RadzenStack Gap="0" AlignItems="AlignItems.End" JustifyContent="JustifyContent.End">
                     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.End" Gap="0">
-                        <RadzenButton Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Shade="Shade.Darker">
-                            <RadzenLink Path="Login" Text="Login" />
+                        <RadzenButton class="rz-mx-6" Visible=@viewLi Variant="Variant.Filled" ButtonStyle="ButtonStyle.Secondary" Shade="Shade.Darker">
+                            <RadzenLink Path="Login" Text="Login" Style="color:white;" />
                         </RadzenButton>
-                        <RadzenButton Variant="Variant.Text" ButtonStyle="ButtonStyle.Info" Shade="Shade.Darker">
+                        <RadzenButton class="rz-mr-6" Visible=@viewSu Variant="Variant.Outlined" ButtonStyle="ButtonStyle.Secondary" Shade="Shade.Darker">
                             <RadzenLink Path="Signup" Text="Sign Up" />
+                        </RadzenButton>
+                        <RadzenButton class="rz-mr-6" Visible=@viewSo Variant="Variant.Text" ButtonStyle="ButtonStyle.Danger" Shade="Shade.Darker" Text="Sign Out" Click="@(()=>signOut())">
                         </RadzenButton>
                     </RadzenStack>
                 </RadzenStack>
@@ -28,7 +30,7 @@
                 <RadzenPanelMenuItem Text="Showcase" Icon="dashboard" Path="/showcase" />
             </RadzenPanelMenu>
             <RadzenPanelMenu >
-                <RadzenPanelMenuItem Visible=@viewWork Text ="View Your Work" Icon="dashboard" Path="/imageView" />
+                <RadzenPanelMenuItem Visible=@viewWork Text ="View Your Work" Icon="assignment" Path="/imageView" />
                 <RadzenPanelMenuItem Visible=@viewUploadWork Text ="Upload A File" Icon="note_add" Path="/uploader" />
                 <RadzenPanelMenuItem Visible=@viewContact Text="Contact a mentor" Icon="face" Path="/contactArtist" />
                 <RadzenPanelMenuItem Visible=@viewMs Text ="View Your Mentorships" Icon="class" Path="/imageViewMentor" />
@@ -56,6 +58,10 @@
     public static bool viewMs = false;
     public static bool viewShowcase = false;
     public static bool viewAddMs = false;
+    public static bool viewSu = true;
+    public static bool viewLi = true;
+    public static bool viewSo = false;
+
 
     //setting up global variables to be accessed by the login function when the user sign in, dynamically adjusting the nav options
     public bool _viewWork {get { return viewWork; } set{ viewWork = value; }}
@@ -64,11 +70,34 @@
     public bool _viewMs { get { return viewMs; } set { viewMs = value; } }
     public bool _viewShowcase { get { return viewShowcase; } set { viewShowcase = value; } }
     public bool _viewAddShowcase { get { return viewAddMs; } set { viewAddMs = value; } }
+    public bool _viewSu { get { return viewSu; } set { viewSu = value; } }
+    public bool _viewSo { get { return viewSo; } set { viewSo = value; } }
+    public bool _viewLI { get { return viewLi; } set { viewLi = value; } }
 
-   
+
     protected override async Task OnInitializedAsync()
     {
-        
+
+    }
+
+    public async Task signOut()
+    {
+        CurrentUser._userid = null;
+        CurrentUser._useremail = null;
+        CurrentUser._role = null;
+
+        viewWork = false;
+        viewUploadWork = false;
+        viewContact = false;
+        viewMs = false;
+        viewShowcase = false;
+        viewAddMs = false;
+        viewSu = true;
+        viewLi = true;
+        viewSo = false;
+
+        nav.NavigateTo("/");
+
     }
 
     }
