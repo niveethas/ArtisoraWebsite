@@ -39,9 +39,9 @@
         {
             response = await _api.MenteeidAsync(currentUserid);
         }catch{
-            var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Warning", Detail = "You must have a mentorship set up to upload work.", Duration = 4000 };
+            var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Error, Summary = "Set up incomplete", Detail = "You must have a mentorship set up to upload work. Please contact a mentor.", Duration = 4000 };
             notif.Notify(notifMsg);
-            nav.NavigateTo("/");
+            nav.NavigateTo("/showcase");
 
         }
 
