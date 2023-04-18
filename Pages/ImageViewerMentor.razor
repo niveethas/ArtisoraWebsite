@@ -167,8 +167,19 @@
         try
         {
             await _api.DeleteAsync(selectedImageId);
-
+            displayImageNames.Clear();
+            imageIds.Clear();
+            mentorshipIds.Clear();
+            allComments.Clear();
             allWorks = await _api.ImagesAsync(currentUserID);
+            @foreach (var x in allWorks)
+            {
+                var imageNametmp = x.ImageURL.Substring(12);
+
+                displayImageNames.Add(imageNametmp);
+                imageIds.Add(x.ImageId);
+                mentorshipIds.Add(x.MentorshipId);
+            }
             showImage = "False";
             selectedValue = "Image names";
             newComment = string.Empty;
