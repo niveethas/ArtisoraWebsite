@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <OpenApiReference Include="OpenAPIs\swagger3.json" CodeGenerator="NSwagCSharp" Namespace="ArtisoraServer" ClassName="ClientAPI">
+    <None Include="OpenAPIs\swagger3.json" ClassName="ClientAPI" />
       <SourceUri>https://localhost:7123/swagger/v1/swagger.json</SourceUri>
     </OpenApiReference>
   </ItemGroup>
@@ -37,6 +37,16 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Radzen.Blazor" Version="4.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Images\" />
+    <Folder Include="wwwroot\ShowcaseImages\" />
+    <Folder Include="wwwroot\WorkImages\" />
+  <ItemGroup>
+    <OpenApiReference Include="OpenAPIs\swagger28.json" CodeGenerator="NSwagCSharp" Namespace="ArtisoraServer" ClassName="ClientAPI">
+      <SourceUri>https://localhost:7123/swagger/v1/swagger.json</SourceUri>
+    </OpenApiReference>
   </ItemGroup>
 
 </Project>
