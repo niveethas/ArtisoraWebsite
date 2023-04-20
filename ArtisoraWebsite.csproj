@@ -1,34 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger1.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger2.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger3.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger4.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger5.json" ClassName="ClientAPI" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.10" />
@@ -52,95 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="OpenAPIs\swagger6.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger7.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger8.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger9.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger10.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger11.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger12.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger13.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger14.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger15.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger16.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger17.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger18.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger19.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger20.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger21.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger22.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger23.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger24.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger25.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger26.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="OpenAPIs\swagger27.json" ClassName="ClientAPI" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <OpenApiReference Include="OpenAPIs\swagger28.json" CodeGenerator="NSwagCSharp" Namespace="ArtisoraServer" ClassName="ClientAPI">
+    <OpenApiReference Include="OpenAPIs\swagger.json" CodeGenerator="NSwagCSharp" Namespace="ArtisoraServer" ClassName="ClientAPI">
       <SourceUri>https://localhost:7123/swagger/v1/swagger.json</SourceUri>
     </OpenApiReference>
   </ItemGroup>
