@@ -47,11 +47,6 @@
 
     }
 
-    void uploadImages (){
-
-        upload.Upload();
-    }
-
     void uploadError(UploadErrorEventArgs args)
     {
         var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Error", Detail = "File submission failed.", Duration = 4000 };
@@ -61,6 +56,7 @@
     async void uploadComplete(UploadCompleteEventArgs args){
         filePath = @"\WorkImages\" + args.RawResponse;
         await updateImageDb();
+        //immediately makes database change when the upload is complete successfully
     }
 
     public async Task updateImageDb(){
@@ -70,6 +66,7 @@
                     MentorshipId = response.MentorshipId,
                     ImageURL = filePath
             };
+            //sets up the image object with the content found on load
            await _api.New2Async(tempImage);
             var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Uploaded!", Detail = "Your upload has been successfully saved!", Duration = 4000 };
             notif.Notify(notifMsg);

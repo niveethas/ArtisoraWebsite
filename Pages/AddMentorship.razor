@@ -24,16 +24,18 @@
 @code{
     [Inject]
     public ClientAPI? _api { get; set; }
+
     public string selectedValue = "Choose Mentee";
     public ICollection<Mentee> allMentees = new List<Mentee>();
     public List<string> menteeNames = new List<string>();
     public List<int> menteeIds = new List<int>();
     public int selectedMenteeId;
     public int? currentUserID = CurrentUser._userid;
+    //gets static global variable 
 
 
     public class localMentorshipDTO{
-
+        //allows the data from the form to be collected
         public int menteeId { get; set; }
         public int mentorId { get; set; }
     }
@@ -69,6 +71,8 @@
         }catch (Exception x){
             try
             {
+                //the global static role variable is used with the selected dropdown id
+                //limits the need to add more calls to the server
                 await _api.New4Async(selectedMenteeId, currentUserID.Value);
                 var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Success, Summary = "Success", Detail = "Mentorship Created! The student can now upload work.", Duration = 4000 };
                 notif.Notify(notifMsg);

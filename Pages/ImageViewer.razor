@@ -52,7 +52,6 @@
     [Inject]
     public ClientAPI? _api { get; set; }
 
-    //public int currentUserID = 4;
     private int? currentUserID = CurrentUser._userid;
     public ICollection<Image> allWorks = new List<Image>();
     public string selectedValue = "Image names";
@@ -66,8 +65,8 @@
     public int selectedMentorshipId;
     public string? newComment;
 
-
-        protected override async Task OnInitializedAsync(){
+    // the user is shown error message if api calls fail
+    protected override async Task OnInitializedAsync(){
             try
             {
                 allWorks = await _api.ImagesAsync(currentUserID);
@@ -79,7 +78,7 @@
             }
         }
         catch{
-            var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Warning", Detail = "You must be logged in to view work.", Duration = 4000 };
+            var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Warning", Detail = "Your images could not be viewed.", Duration = 4000 };
             notif.Notify(notifMsg);
             nav.NavigateTo("/");
         }
@@ -99,7 +98,7 @@
 
         newComment = string.Empty;
         allComments = await _api.MessagesAsync(selectedImageId);
-
+        //add comment to the database, refresh the comments list and clear the text box
     }
 
     public async Task viewImage(){
@@ -108,6 +107,8 @@
         var position = displayImageNames.IndexOf(selectedValue);
         selectedImageId = imageIds[position];
         selectedMentorshipId = mentorshipIds[position];
+        //use the value of the image to locate the index position
+        //this can be matched with the index position of the ids.
         try
         {
             allComments = await _api.MessagesAsync(selectedImageId);
@@ -116,6 +117,7 @@
 
         }
         showImage = "True";
+        //image card is shown
 
     }
 
@@ -141,6 +143,7 @@
             selectedValue = "Image names";
             newComment = string.Empty;
             //delete image and reload the page
+            //resets all the dropdown options and the coresponding lists
         }catch{
 
         }

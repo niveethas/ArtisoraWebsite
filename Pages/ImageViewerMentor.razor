@@ -64,7 +64,6 @@
     [Inject]
     public ClientAPI? _api { get; set; }
 
-    // public int currentUserID = 1;
     private int? currentUserID = CurrentUser._userid;
     public ICollection<Image> allWorks = new List<Image>();
     public ICollection<Mentorship> allMentorships = new List<Mentorship>();
@@ -81,6 +80,8 @@
     public int selectedMentorshipId;
     public string? newComment;
     public List<int> msIds = new List<int>();
+    
+    //same functionality as the imageViewer.razor file, with the addition of mentorship selection
 
 
     protected override async Task OnInitializedAsync(){
@@ -186,6 +187,8 @@
             selectedValue = "Image names";
             newComment = string.Empty;
             //delete image and reload the page
+            //reload the lists and the card showing
+
         }
         catch
         {

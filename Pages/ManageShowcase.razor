@@ -113,6 +113,7 @@
     ShowcaseDTO newShowcase = new ShowcaseDTO();
     public string? filePath1, filePath2, filePath3;
     public string? showI1, showI2, showI3 = "False";
+    //can be used to show the images in future development
     public int selectedTab = 0;
 
     protected override async Task OnInitializedAsync()
@@ -164,6 +165,7 @@
 
     public async Task createShowcase(ShowcaseDTO newSC){
         if (newSC.Image1Caption != string.Empty && newSC.Image2Caption != string.Empty && newSC.Image3Caption != string.Empty && newSC.SelfDescription != string.Empty) {
+            //checks that all mandatory fields have been entered
             try
             {
                 var currentEmail = CurrentUser._useremail;
@@ -186,6 +188,7 @@
                 showI1 = "False";
                 showI2 = "False";
                 showI3 = "False";
+                //reseting image showing
                 nav.NavigateTo("/showcase");
             }
             catch (Exception e)

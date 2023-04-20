@@ -94,6 +94,7 @@
         selectedArtistId = artistIds[position];
         showcases = await _api.ShowcasesAsync(selectedArtistId);
         showShowcase = "True";
+        //enables the showcase card to be displayed when the showcases is not empty.
     }
 }
 

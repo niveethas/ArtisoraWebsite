@@ -104,12 +104,14 @@
     async Task createUser(UserRegDTO newuser)
     {
         if ((Regex.IsMatch(newuser.Password, "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[#$%^&+=@])(?=\\S+$).{6,}$"))&&(newuser.Password.Equals(RePassword)))
+        //checks the password matches on re-entry and the regex pattern
         {
             try
             {
                 if (roleSwitch){
                     newuser.Role = 2;
                     await _api.New3Async(newuser.FirstName, newuser.LastName, newuser.Email, newuser.Password, newuser.Role);
+                    //calls different tables dependent on the role (mentor or mentee)
                 }else{
                     newuser.Role = 1;
                     await _api.NewAsync(newuser);
@@ -140,5 +142,6 @@
         newMentee.FirstName = string.Empty;
         newMentee.LastName = string.Empty;
         roleSwitch = false;
+        //form is reset on completion
     }
 }

@@ -94,6 +94,7 @@
     }
 
     //set timer to call slider function every 10 seconds
+    //code adapted from https://learn.microsoft.com/en-us/dotnet/api/system.timers.timer?view=net-8.0
     private void Timer(){
         slideTimer = new System.Timers.Timer(10000);
         slideTimer.Elapsed += new ElapsedEventHandler(Slider);

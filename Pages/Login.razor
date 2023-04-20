@@ -50,7 +50,7 @@
         }
         catch
         {
-
+            //call both the mentee and mentor table to see which role the user is
         }
         try{
 
@@ -63,6 +63,7 @@
         {
             if ((response != null)&&(responseMr == null))
             {
+                //this if statement consideres the user as a mentee
                 try
                 {
                     var foundPassword = await _api.LoginAsync(la.Username);
@@ -71,6 +72,7 @@
                         CurrentUser._userid = response.MenteeId;
                         CurrentUser._useremail = response.Email;
                         CurrentUser._role = foundPassword.Role;
+                        //assign the global static variables to be used through out the system
                         int? currentRole = CurrentUser._role;
                         if (currentRole != null)
                         {
@@ -103,6 +105,7 @@
                     notif.Notify(notifMsg);
                 }
             }else if ((response == null)&&(responseMr != null)){
+                //this if statement is for mentors
                 try
                 {
                     var foundPassword = await _api.LoginAsync(la.Username);
@@ -149,6 +152,7 @@
             {
                 var notifMsg = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = "Error", Detail = "Email does not have an existing account", Duration = 5000 };
                 notif.Notify(notifMsg);
+                //email could not be found in either database
             }
         }
         catch (Exception ex)
